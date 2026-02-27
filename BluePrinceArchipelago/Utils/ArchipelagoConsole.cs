@@ -526,7 +526,7 @@ public class ItemCommand(string name) : Command(name) {
             ArchipelagoConsole.LogMessage("You are not currently in a run, you can only run this command during a run.");
             return;
         }
-        if (Args.Count > 2)
+        if (Args.Count > 1)
         {
             string subcommand = Args[0];
             if (subcommand.ToLower() == "add")
