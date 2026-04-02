@@ -220,12 +220,9 @@ public class ArchipelagoClient
         {
             foreach (ItemInfo item in session.Items.AllItemsReceived)
             {
-                // Check if the item has already been received.
-                if (!ServerData.ReceivedItems.Contains(item.ItemName)) {
-                    if (!ModInstance.Instance.QueueManager.RecieveItem(item))
-                    {
-                        ModInstance.Instance.QueueManager.AddItemToQueue(item);
-                    }
+                if (!ModInstance.Instance.QueueManager.RecieveItem(item))
+                {
+                    ModInstance.Instance.QueueManager.AddItemToQueue(item);
                 }
                 session.Items.DequeueItem();
             }
