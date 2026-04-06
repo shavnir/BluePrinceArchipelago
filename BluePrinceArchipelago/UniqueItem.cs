@@ -98,9 +98,7 @@ namespace BluePrinceArchipelago.Core
             }
         }
     }
-    public class ProgressiveItem(string name, GameObject gameObject, bool isUnlocked, int maxCount, bool isPreSpawn = true) : UniqueItem(name, gameObject, isUnlocked, isPreSpawn) { 
-
-    }
+    
 
     public class UniqueItemManager
     {

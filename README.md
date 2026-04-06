@@ -103,9 +103,17 @@ Please make sure you have Bepinex 6 installed as we need the IL2CPP support.
 ```dotnet nuget add source https://nuget.bepinex.dev/v3/index.json --name Bepinex```
 5. If nuget didn't install the required dependencies and the previous step didn't fully fix the issue, you will need to run the following to install these packages by running these commands in the **project** folder.
     ```
-    dotnet add package BepInEx.Unity.IL2CPP --version 6.0.0-be.753
-    dotnet add package Archipelago.MultiClient.Net -- version 6.7.0
+    dotnet add package BepInEx.Unity.IL2CPP --version 6.0.0-be.755
+    dotnet add package Archipelago.MultiClient.Net --version 6.7.1
     ```
+6. Finally create a new file in the root of the repository and call it Directory.Build.props. Add this to the file replacing the directory "Path/To/BluePrinceHere/" with the path to your Blue Prince Installation:
+```
+<Project>
+	<PropertyGroup>
+		<BluePrinceDir>Path/To/BluePrinceHere/</BluePrinceDir>
+	</PropertyGroup>
+</Project>
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

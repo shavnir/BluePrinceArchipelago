@@ -1,0 +1,5 @@
+<Target Name="BluePrince" Returns="$(BluePrinceDir)">
+	<PropertyGroup>
+		<BluePrinceDir>C:\Program Files (x86)\Steam\steamapps\common\Blue Prince</BluePrinceDir>
+	</PropertyGroup>
+</Target>

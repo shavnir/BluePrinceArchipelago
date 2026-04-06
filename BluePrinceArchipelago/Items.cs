@@ -1,6 +1,7 @@
 ﻿using Archipelago.MultiClient.Net.Models;
 using BluePrinceArchipelago.Utils;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 
@@ -21,11 +22,13 @@ namespace BluePrinceArchipelago.Core
         public ModItemManager()
         {
         }
-        public void Initialize() { 
+        public void Initialize()
+        {
 
         }
-        public static void LoadInventories() {
-         
+        public static void LoadInventories()
+        {
+
             PreSpawn = GameObject.Find("__SYSTEM/Inventory/Inventory (PreSpawn)")?.GetArrayListProxy("Inventory (PreSpawn)");
             EstateItems = GameObject.Find("__SYSTEM/Inventory/Inventory (EstateItems)")?.GetArrayListProxy("Inventory (EstateItems)");
             PickedUp = GameObject.Find("__SYSTEM/Inventory/Inventory (PickedUp)")?.GetArrayListProxy("Inventory (PickedUp)");
@@ -56,11 +59,13 @@ namespace BluePrinceArchipelago.Core
                 Logging.Log($"Item {item.Name} already added, can't add multiple copies.");
             }
         }
-        public void AddTrap(Trap trap) { 
+        public void AddTrap(Trap trap)
+        {
             TrapList.Add(trap);
         }
 
-        public void AddItem(JunkItem itemToAdd, int count = 1) {
+        public void AddItem(JunkItem itemToAdd, int count = 1)
+        {
             foreach (ModItem item in JunkItemList)
             {
                 if (item.Name == itemToAdd.Name)
@@ -72,7 +77,8 @@ namespace BluePrinceArchipelago.Core
             ItemDict[itemToAdd.Name] = itemToAdd;
             JunkItemList.Add(itemToAdd);
         }
-        public void AddItem(PermanentItem itemToAdd, int count = 1) {
+        public void AddItem(PermanentItem itemToAdd, int count = 1)
+        {
             foreach (ModItem item in PermanentItemList)
             {
                 if (item.Name == itemToAdd.Name)
@@ -84,7 +90,8 @@ namespace BluePrinceArchipelago.Core
             ItemDict[itemToAdd.Name] = itemToAdd;
             PermanentItemList.Add(itemToAdd);
         }
-        public void AddItem(string name, GameObject gameObject, bool isUnlocked, bool isUnique = false, bool isJunk = false, bool isPermanent = false, int count = 1, string itemType = null) {
+        public void AddItem(string name, GameObject gameObject, bool isUnlocked, bool isUnique = false, bool isJunk = false, bool isPermanent = false, int count = 1, string itemType = null)
+        {
             if (isUnique)
             {
                 if (isJunk || isPermanent || itemType != null || count > 1 || count < 1)
@@ -118,7 +125,8 @@ namespace BluePrinceArchipelago.Core
                 ItemDict[item.Name] = item;
                 PermanentItemList.Add(item);
             }
-            else {
+            else
+            {
                 Logging.LogWarning("Item could not be added, invalid parameters.");
             }
         }
@@ -134,7 +142,8 @@ namespace BluePrinceArchipelago.Core
             return null;
         }
 
-        public JunkItem GetJunkItem(string name) {
+        public JunkItem GetJunkItem(string name)
+        {
             foreach (JunkItem item in JunkItemList)
             {
                 if (item.Name.ToLower().Equals(name.ToLower()))
@@ -156,16 +165,21 @@ namespace BluePrinceArchipelago.Core
             return null;
         }
 
-        public void StartOfDay(int dayNum) {
+        public void StartOfDay(int dayNum)
+        {
             AddAllPermanenentItems();
         }
         // returns true if item was released from queue, returns false if no item in queue to release or failed to release the item.
 
         // Adds all permanent items to inventory, meant to be run at start of day.
-        public void AddAllPermanenentItems() {
-            if (PermanentItemList.Count > 0) {
-                foreach (PermanentItem item in PermanentItemList) {
-                    if (item.IsUnlocked) {
+        public void AddAllPermanenentItems()
+        {
+            if (PermanentItemList.Count > 0)
+            {
+                foreach (PermanentItem item in PermanentItemList)
+                {
+                    if (item.IsUnlocked)
+                    {
                         Logging.Log($"Adding {item.Count} {item.Name}(s)");
                         item.AddItemToInventory();
                     }
@@ -173,20 +187,24 @@ namespace BluePrinceArchipelago.Core
 
             }
         }
-        public void OnTrapReceived(ItemInfo itemInfo) {
+        public void OnTrapReceived(ItemInfo itemInfo)
+        {
             // Get the first matching item.
             Trap trap = TrapList.FirstOrDefault(trap => trap.Name.ToLower() == itemInfo.ItemName.ToLower());
             if (trap != null)
             {
                 trap.ActivateTrap();
             }
-            else {
+            else
+            {
                 Logging.LogError($"Error receiving {itemInfo.ItemName}: No Trap with that name could be found.");
             }
         }
-        public string GetItemType(string itemName) {
+        public string GetItemType(string itemName)
+        {
             ModItem item = GetPermanentItem(itemName);
-            if (item != null) {
+            if (item != null)
+            {
                 return "Permanent";
             }
             item = GetJunkItem(itemName);
@@ -195,7 +213,7 @@ namespace BluePrinceArchipelago.Core
                 return "Junk";
             }
             item = GetUniqueItem(itemName);
-            if(item != null)
+            if (item != null)
             {
                 return "Unique";
             }
@@ -203,7 +221,8 @@ namespace BluePrinceArchipelago.Core
         }
 
         // Handle the code for recieving an item check that results in receiving an item.
-        public void OnItemCheckRecieved(ItemInfo itemInfo) {
+        public void OnItemCheckRecieved(ItemInfo itemInfo)
+        {
             ModItem item = null;
             //If item exists, retreive it.
             if (ItemDict.ContainsKey(itemInfo.ItemName))
@@ -212,7 +231,8 @@ namespace BluePrinceArchipelago.Core
                 item.AddItemToInventory();
                 return;
             }
-            else {
+            else
+            {
                 Logging.Log($"Unable to give {itemInfo.ItemName} to player. The item doesn't exist or isn't currently handled by the mod.");
             }
         }
@@ -240,7 +260,8 @@ namespace BluePrinceArchipelago.Core
             {
                 return true;
             }
-            else if (!isPrespawn) {
+            else if (!isPrespawn)
+            {
                 return true;
             }
 
@@ -248,13 +269,15 @@ namespace BluePrinceArchipelago.Core
         }
 
         // Gets an item from the prespawn item list.
-        public GameObject GetPreSpawnItem(string itemName) {
+        public GameObject GetPreSpawnItem(string itemName)
+        {
             for (int i = 0; i < PreSpawn.GetCount(); i++)
             {
                 GameObject prespawnItem = PreSpawn.arrayList[i].TryCast<GameObject>();
                 if (prespawnItem != null)
                 {
-                    if(prespawnItem.name.Trim().ToLower() == itemName.ToLower()) {
+                    if (prespawnItem.name.Trim().ToLower() == itemName.ToLower())
+                    {
                         return prespawnItem;
                     }
                 }
@@ -263,7 +286,8 @@ namespace BluePrinceArchipelago.Core
         }
 
         // Gets an item that the player has picked up.
-        public GameObject GetPickedUpItem(string itemName) {
+        public GameObject GetPickedUpItem(string itemName)
+        {
             for (int i = 0; i < PickedUp.GetCount(); i++)
             {
                 GameObject pickedupItem = PickedUp.arrayList[i].TryCast<GameObject>();
@@ -279,17 +303,20 @@ namespace BluePrinceArchipelago.Core
         }
 
         // Makes the player lose a random item if they have an item. 
-        public void LoseRandomItem() {
+        public void LoseRandomItem()
+        {
             //We don't care if this fails, since it's a trap, and I'm too lazy to handle the edgecase where you are not in a run, and you spawn with an item.
             int count = PickedUp.arrayList.Count;
-            if (count > 0 && ModInstance.IsInRun) { 
+            if (count > 0 && ModInstance.IsInRun)
+            {
                 int index = Random.Range(0, count);
                 PickedUp.RemoveAt(index);
             }
         }
     }
 
-    public class ModItem( string name, GameObject gameObject, bool isUnlocked, int count = 1){
+    public class ModItem(string name, GameObject gameObject, bool isUnlocked, int count = 1)
+    {
         private string _Name = name;
         public string Name { get { return _Name; } set { _Name = value; } }
 
@@ -304,55 +331,62 @@ namespace BluePrinceArchipelago.Core
         }
 
         private int _Count = count;
-        public int Count 
-        { 
+        public int Count
+        {
             get { return _Count; }
-            set { _Count = value;  }
+            set { _Count = value; }
         }
         private bool _IsUnique = false;
-        public bool IsUnique { 
+        public bool IsUnique
+        {
             get { return _IsUnique; }
             set { _IsUnique = value; }
         }
 
-        public virtual void AddItemToInventory() {
+        public virtual void AddItemToInventory()
+        {
             // Put out an error if this method was not properly overriden. There should be no base moditems.
             Logging.LogError("Error: The Base Moditem.AddItemToInventory method should be overriden.");
         }
     }
 
     // Handles junk items.
-    public class JunkItem(string name, GameObject gameObject, bool isUnlocked, string itemType, int count = 1) : ModItem(name, gameObject, isUnlocked) {
+    public class JunkItem(string name, GameObject gameObject, bool isUnlocked, string itemType, int count = 1) : ModItem(name, gameObject, isUnlocked)
+    {
 
         private string _ItemType = itemType;
-        public string Itemtype 
+        public string Itemtype
         {
             get { return _ItemType; }
             set { _ItemType = value; }
         }
 
         private int _Count = count;
-        public new int Count { 
-            get { return _Count; } 
-            set 
+        public new int Count
+        {
+            get { return _Count; }
+            set
             {
                 if (value > 0)
                 {
                     _IsTrap = true; //Sets IsTrap dynamically (not sure that it's needed, but it's neat).
                 }
-                else { 
+                else
+                {
                     _IsTrap = false; //Sets IsTrap dynamically (not sure that it's needed, but it's neat).
                 }
-                _Count = value; 
+                _Count = value;
             }
         }
 
-        private bool _IsTrap = count < 0; 
-        public bool IsTrap { 
+        private bool _IsTrap = count < 0;
+        public bool IsTrap
+        {
             get { return _IsTrap; } //No setter since this is connected to count
         }
 
-        public override void AddItemToInventory() {
+        public override void AddItemToInventory()
+        {
             if (_ItemType == "Gems")
             {
                 AdjustGems(_Count);
@@ -382,30 +416,36 @@ namespace BluePrinceArchipelago.Core
                 Logging.LogWarning($"{_ItemType} is an invalid type, or is not currently supported.");
             }
         }
-        private void AdjustGems(int count = 1) {
+        private void AdjustGems(int count = 1)
+        {
             ModInstance.GemManager.FindIntVariable("Gem Adjustment Amount").Value = count;
             // I think sound would be neat since it's more noticeable.
             ModInstance.GemManager.SendEvent("Update with Sound");
         }
-        private void AdjustSteps(int count = 1) {
+        private void AdjustSteps(int count = 1)
+        {
             // change the adjustment amount.
             ModInstance.StepManager.FindIntVariable("Adjustment Amount").Value = count;
             // Send the "Update" event and the step counter should update.
             ModInstance.StepManager.SendEvent("Update");
         }
-        private void AdjustGold(int count = 1) {
+        private void AdjustGold(int count = 1)
+        {
             ModInstance.GoldManager.FindIntVariable("Adjustment Amount").Value = count;
             ModInstance.GoldManager.SendEvent("Update"); // Might need to be "Add Coins" instead.
         }
-        private void AdjustDice(int count = 1) {
+        private void AdjustDice(int count = 1)
+        {
             ModInstance.DiceManager.FindIntVariable("Adjustment Amount").Value = count;
             ModInstance.DiceManager.SendEvent("Update");
         }
-        private void AdjustKeys(int count = 1) {
+        private void AdjustKeys(int count = 1)
+        {
             ModInstance.KeyManager.FindIntVariable("Adjustment Amount").Value = count;
             ModInstance.KeyManager.SendEvent("Update");
         }
-        private void AdjustLuck(int count = 1) { 
+        private void AdjustLuck(int count = 1)
+        {
             int luck = ModInstance.LuckManager.FindIntVariable("LUCK").Value;
             if (luck + count > 0)
             {
@@ -418,18 +458,19 @@ namespace BluePrinceArchipelago.Core
         }
     }
 
-    public class PermanentItem(string name, GameObject gameObject, bool isUnlocked, string itemType,int count = 1) : ModItem(name, gameObject, isUnlocked)
+    public class PermanentItem(string name, GameObject gameObject, bool isUnlocked, string itemType, int count = 1) : ModItem(name, gameObject, isUnlocked)
     {
         private string _ItemType = itemType;
 
-        public string ItemType 
-        { 
+        public string ItemType
+        {
             get { return _ItemType; }
             set { _ItemType = value; }
         }
 
         private bool _IsUnlocked = isUnlocked;
-        public new bool IsUnlocked { 
+        public new bool IsUnlocked
+        {
             get { return _IsUnlocked; }
             set { _IsUnlocked = value; }
         }
@@ -443,7 +484,8 @@ namespace BluePrinceArchipelago.Core
             }
         }
 
-        public override void AddItemToInventory() {
+        public override void AddItemToInventory()
+        {
             if (_ItemType == "Gems")
             {
                 AdjustGems(_Count);
@@ -469,7 +511,8 @@ namespace BluePrinceArchipelago.Core
             {
                 AdjustKeys(_Count);
             }
-            else if (_ItemType == "Luck") {
+            else if (_ItemType == "Luck")
+            {
                 AdjustLuck(_Count);
             }
             else if (_ItemType == "Stars")
@@ -525,7 +568,8 @@ namespace BluePrinceArchipelago.Core
         }
         private void AdjustStars(int count = 1)
         {
-            if (!GameObject.Find("__SYSTEM/HUD/Stars").active) {
+            if (!GameObject.Find("__SYSTEM/HUD/Stars").active)
+            {
                 //Activate stars to ensure it can properly be updated.
                 GameObject.Find("__SYSTEM/HUD/Stars").SetActive(true);
             }
@@ -540,109 +584,137 @@ namespace BluePrinceArchipelago.Core
             }
         }
     }
-    public static class RegisterItems
+    public class ProgressiveItem(string name, GameObject gameObject, bool isUnlocked, string itemType, int maxCount = -1, int count = 0, List<string> locations = null, bool isPreSpawn = true) : ModItem(name, gameObject, isUnlocked)
     {
-
-        public static void Register()
+        private int _Count = count;
+        public new int Count
         {
-            //Unique Items
-            Plugin.ModItemManager.AddItem(new UniqueItem("CAR KEYS", Plugin.ModItemManager.GetPreSpawnItem("CAR KEYS"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("KEYCARD", Plugin.ModItemManager.GetPreSpawnItem("KEYCARD"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("SILVER KEY", Plugin.ModItemManager.GetPreSpawnItem("SILVER KEY"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("KEY 8", Plugin.ModItemManager.GetPreSpawnItem("KEY 8"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("BASEMENT KEY", Plugin.ModItemManager.GetPreSpawnItem("BASEMENT KEY"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("VAULT KEY 149", Plugin.ModItemManager.GetPreSpawnItem("VAULT KEY 149"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("VAULT KEY 233", Plugin.ModItemManager.GetPreSpawnItem("VAULT KEY 233"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("VAULT KEY 304", Plugin.ModItemManager.GetPreSpawnItem("VAULT KEY 304"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("VAULT KEY 370", Plugin.ModItemManager.GetPreSpawnItem("VAULT KEY 370"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("DIARY KEY", Plugin.ModItemManager.GetPreSpawnItem("DIARY KEY"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("PRISM KEY_0", Plugin.ModItemManager.GetPreSpawnItem("PRISM KEY_0"), false, false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("KEY of Aries", null, false, false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("SECRET GARDEN KEY", Plugin.ModItemManager.GetPreSpawnItem("SECRET GARDEN KEY"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("MICROCHIP 1", Plugin.ModItemManager.GetPreSpawnItem("MICROCHIP 1"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("MICROCHIP 2", Plugin.ModItemManager.GetPreSpawnItem("MICROCHIP 2"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("MICROCHIP 3", Plugin.ModItemManager.GetPreSpawnItem("MICROCHIP 3"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("CABINET KEY 1", Plugin.ModItemManager.GetPreSpawnItem("CABINET KEY 1"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("CABINET KEY 2", Plugin.ModItemManager.GetPreSpawnItem("CABINET KEY 2"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("CABINET KEY 3", Plugin.ModItemManager.GetPreSpawnItem("CABINET KEY 3"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("BATTERY PACK", Plugin.ModItemManager.GetPreSpawnItem("BATTERY PACK"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("BROKEN LEVER", Plugin.ModItemManager.GetPreSpawnItem("BROKEN LEVER"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("MAGNIFYING GLASS", Plugin.ModItemManager.GetPreSpawnItem("MAGNIFYING GLASS"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("METAL DETECTOR", Plugin.ModItemManager.GetPreSpawnItem("METAL DETECTOR"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("SHOVEL", Plugin.ModItemManager.GetPreSpawnItem("SHOVEL"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("SLEDGE HAMMER", Plugin.ModItemManager.GetPreSpawnItem("SLEDGE HAMMER"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("TELESCOPE", Plugin.ModItemManager.GetPreSpawnItem("TELESCOPE"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("RUNNING SHOES", Plugin.ModItemManager.GetPreSpawnItem("RUNNING SHOES"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("SALT SHAKER", Plugin.ModItemManager.GetPreSpawnItem("SALT SHAKER"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("SLEEPING MASK", Plugin.ModItemManager.GetPreSpawnItem("SLEEPING MASK"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("COIN PURSE", Plugin.ModItemManager.GetPreSpawnItem("COIN PURSE"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("COUPON BOOK", Plugin.ModItemManager.GetPreSpawnItem("COUPON BOOK"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("LOCK PICK KIT", Plugin.ModItemManager.GetPreSpawnItem("LOCK PICK KIT"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("LUCKY RABBIT'S FOOT", Plugin.ModItemManager.GetPreSpawnItem("LUCKY RABBIT'S FOOT"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("TREASURE MAP", Plugin.ModItemManager.GetPreSpawnItem("TREASURE MAP"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("STOPWATCH", Plugin.ModItemManager.GetPreSpawnItem("STOPWATCH"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("REPELLENT", null, false, false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("WATERING CAN", Plugin.ModItemManager.GetPreSpawnItem("WATERING CAN"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("LUNCH BOX", null, false, false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("CURSED EFFIGY", null, false, false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("CROWN", Plugin.ModItemManager.GetPreSpawnItem("CROWN"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("PAPER CROWN", Plugin.ModItemManager.GetPreSpawnItem("PAPER CROWN"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("GEAR WRENCH", Plugin.ModItemManager.GetPreSpawnItem("GEAR WRENCH"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("COMPASS", Plugin.ModItemManager.GetPreSpawnItem("COMPASS"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("SAFTEY DEPOSIT KEY 149", Plugin.ModItemManager.GetPreSpawnItem("SAFTEY DEPOSIT KEY 149"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("SAFTEY DEPOSIT KEY 233", Plugin.ModItemManager.GetPreSpawnItem("SAFTEY DEPOSIT KEY 233"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("SAFTEY DEPOSIT KEY 304", Plugin.ModItemManager.GetPreSpawnItem("SAFTEY DEPOSIT KEY 304"), false));
-            Plugin.ModItemManager.AddItem(new UniqueItem("SAFTEY DEPOSIT KEY 370", Plugin.ModItemManager.GetPreSpawnItem("SAFTEY DEPOSIT KEY 370"), false));
+            get { return _Count; }
+            set
+            {
+                _Count = value;
+            }
+        }
+        public string ItemType = itemType;
 
-            //Permanent Items
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Allowance 1", null, false, "Allowance", 1));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Allowance 2", null, false, "Allowance", 2));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Dice 1", null, false, "Dice", 1));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Dice 2", null, false, "Dice", 2));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Keys 1", null, false, "Keys", 1));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Keys 2", null, false, "Keys", 2));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Steps 1", null, false, "Steps", 1));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Steps 2", null, false, "Steps", 2));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Gems 1", null, false, "Gems", 1));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Gems 2", null, false, "Gems", 2));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Luck 1", null, false, "Luck", 1));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Luck 2", null, false, "Luck", 2));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Steps 5", null, false, "Steps", 5));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 1", null, false, "Stars", 1));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 2", null, false, "Stars", 2));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 5", null, false, "Stars", 5));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 1", null, false, "Stars", 1));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 2", null, false, "Stars", 2));
-            Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 5", null, false, "Stars", 5));
-            
-            //Junk Items
-            Plugin.ModItemManager.AddItem(new JunkItem("Dug Up Nothing", null, true, "Nothing",1));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Gold 1", null, true, "Gold", 1));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Gold 2", null, true, "Gold", 2));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Gold 5", null, true, "Gold", 5));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Dice 1", null, true, "Dice", 1));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Dice 2", null, true, "Dice", 2));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Dice 4", null, true, "Dice", 4));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Gems 1", null, true, "Gems", 1));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Gems 2", null, true, "Gems", 2));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Keys 1", null, true, "Keys", 1));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Keys 2", null, true, "Keys", 2));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Keys 3", null, true, "Keys", 3));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Steps 1", null, true, "Steps", 1));
-            Plugin.ModItemManager.AddItem(new JunkItem("Extra Steps 2", null, true, "Steps", 2));
-            
-            //Traps
-            Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 1","Steps", -1));
-            Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 2", "Steps", -2));
-            Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 5", "Steps", -5));
-            Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 1", "Stars", -1));
-            Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 2", "Stars", -2));
-            Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 5", "Stars", -5));
-            Plugin.ModItemManager.AddTrap(new EndOfDayTrap("Trap End Day", "EOD"));
-            Plugin.ModItemManager.AddTrap(new FreezeTrap("Trap Freeze Items", "Freeze"));
-            Plugin.ModItemManager.AddTrap(new LoseItemTrap("Trap Lose Item", "Lose Item"));
+        public int MaxCount = maxCount;
 
-            //TODO Add PermanentUnlocks (Eg. Orchard)
+        public bool IsPreSpawn = isPreSpawn;
+
+        public List<string> Locations = locations ?? new List<string>();
+
+        public bool HasMaxCount
+        {
+            get { return maxCount >= 0; }
+
+
         }
     }
-}
+
+
+        public static class RegisterItems
+        {
+
+            public static void Register()
+            {
+                //Unique Items
+                Plugin.ModItemManager.AddItem(new UniqueItem("CAR KEYS", Plugin.ModItemManager.GetPreSpawnItem("CAR KEYS"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("KEYCARD", Plugin.ModItemManager.GetPreSpawnItem("KEYCARD"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("SILVER KEY", Plugin.ModItemManager.GetPreSpawnItem("SILVER KEY"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("KEY 8", Plugin.ModItemManager.GetPreSpawnItem("KEY 8"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("BASEMENT KEY", Plugin.ModItemManager.GetPreSpawnItem("BASEMENT KEY"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("VAULT KEY 149", Plugin.ModItemManager.GetPreSpawnItem("VAULT KEY 149"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("VAULT KEY 233", Plugin.ModItemManager.GetPreSpawnItem("VAULT KEY 233"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("VAULT KEY 304", Plugin.ModItemManager.GetPreSpawnItem("VAULT KEY 304"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("VAULT KEY 370", Plugin.ModItemManager.GetPreSpawnItem("VAULT KEY 370"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("DIARY KEY", Plugin.ModItemManager.GetPreSpawnItem("DIARY KEY"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("PRISM KEY_0", Plugin.ModItemManager.GetPreSpawnItem("PRISM KEY_0"), false, false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("KEY of Aries", null, false, false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("SECRET GARDEN KEY", Plugin.ModItemManager.GetPreSpawnItem("SECRET GARDEN KEY"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("MICROCHIP 1", Plugin.ModItemManager.GetPreSpawnItem("MICROCHIP 1"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("MICROCHIP 2", Plugin.ModItemManager.GetPreSpawnItem("MICROCHIP 2"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("MICROCHIP 3", Plugin.ModItemManager.GetPreSpawnItem("MICROCHIP 3"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("CABINET KEY 1", Plugin.ModItemManager.GetPreSpawnItem("CABINET KEY 1"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("CABINET KEY 2", Plugin.ModItemManager.GetPreSpawnItem("CABINET KEY 2"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("CABINET KEY 3", Plugin.ModItemManager.GetPreSpawnItem("CABINET KEY 3"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("BATTERY PACK", Plugin.ModItemManager.GetPreSpawnItem("BATTERY PACK"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("BROKEN LEVER", Plugin.ModItemManager.GetPreSpawnItem("BROKEN LEVER"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("MAGNIFYING GLASS", Plugin.ModItemManager.GetPreSpawnItem("MAGNIFYING GLASS"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("METAL DETECTOR", Plugin.ModItemManager.GetPreSpawnItem("METAL DETECTOR"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("SHOVEL", Plugin.ModItemManager.GetPreSpawnItem("SHOVEL"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("SLEDGE HAMMER", Plugin.ModItemManager.GetPreSpawnItem("SLEDGE HAMMER"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("TELESCOPE", Plugin.ModItemManager.GetPreSpawnItem("TELESCOPE"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("RUNNING SHOES", Plugin.ModItemManager.GetPreSpawnItem("RUNNING SHOES"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("SALT SHAKER", Plugin.ModItemManager.GetPreSpawnItem("SALT SHAKER"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("SLEEPING MASK", Plugin.ModItemManager.GetPreSpawnItem("SLEEPING MASK"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("COIN PURSE", Plugin.ModItemManager.GetPreSpawnItem("COIN PURSE"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("COUPON BOOK", Plugin.ModItemManager.GetPreSpawnItem("COUPON BOOK"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("LOCK PICK KIT", Plugin.ModItemManager.GetPreSpawnItem("LOCK PICK KIT"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("LUCKY RABBIT'S FOOT", Plugin.ModItemManager.GetPreSpawnItem("LUCKY RABBIT'S FOOT"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("TREASURE MAP", Plugin.ModItemManager.GetPreSpawnItem("TREASURE MAP"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("STOPWATCH", Plugin.ModItemManager.GetPreSpawnItem("STOPWATCH"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("REPELLENT", null, false, false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("WATERING CAN", Plugin.ModItemManager.GetPreSpawnItem("WATERING CAN"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("LUNCH BOX", null, false, false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("CURSED EFFIGY", null, false, false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("CROWN", Plugin.ModItemManager.GetPreSpawnItem("CROWN"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("PAPER CROWN", Plugin.ModItemManager.GetPreSpawnItem("PAPER CROWN"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("GEAR WRENCH", Plugin.ModItemManager.GetPreSpawnItem("GEAR WRENCH"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("COMPASS", Plugin.ModItemManager.GetPreSpawnItem("COMPASS"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("SAFTEY DEPOSIT KEY 149", Plugin.ModItemManager.GetPreSpawnItem("SAFTEY DEPOSIT KEY 149"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("SAFTEY DEPOSIT KEY 233", Plugin.ModItemManager.GetPreSpawnItem("SAFTEY DEPOSIT KEY 233"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("SAFTEY DEPOSIT KEY 304", Plugin.ModItemManager.GetPreSpawnItem("SAFTEY DEPOSIT KEY 304"), false));
+                Plugin.ModItemManager.AddItem(new UniqueItem("SAFTEY DEPOSIT KEY 370", Plugin.ModItemManager.GetPreSpawnItem("SAFTEY DEPOSIT KEY 370"), false));
+
+                //Permanent Items
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Allowance 1", null, false, "Allowance", 1));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Allowance 2", null, false, "Allowance", 2));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Dice 1", null, false, "Dice", 1));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Dice 2", null, false, "Dice", 2));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Keys 1", null, false, "Keys", 1));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Keys 2", null, false, "Keys", 2));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Steps 1", null, false, "Steps", 1));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Steps 2", null, false, "Steps", 2));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Gems 1", null, false, "Gems", 1));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Gems 2", null, false, "Gems", 2));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Luck 1", null, false, "Luck", 1));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Starting Luck 2", null, false, "Luck", 2));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Steps 5", null, false, "Steps", 5));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 1", null, false, "Stars", 1));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 2", null, false, "Stars", 2));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 5", null, false, "Stars", 5));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 1", null, false, "Stars", 1));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 2", null, false, "Stars", 2));
+                Plugin.ModItemManager.AddItem(new PermanentItem("Extra Stars 5", null, false, "Stars", 5));
+
+                //Junk Items
+                Plugin.ModItemManager.AddItem(new JunkItem("Dug Up Nothing", null, true, "Nothing", 1));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Gold 1", null, true, "Gold", 1));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Gold 2", null, true, "Gold", 2));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Gold 5", null, true, "Gold", 5));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Dice 1", null, true, "Dice", 1));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Dice 2", null, true, "Dice", 2));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Dice 4", null, true, "Dice", 4));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Gems 1", null, true, "Gems", 1));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Gems 2", null, true, "Gems", 2));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Keys 1", null, true, "Keys", 1));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Keys 2", null, true, "Keys", 2));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Keys 3", null, true, "Keys", 3));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Steps 1", null, true, "Steps", 1));
+                Plugin.ModItemManager.AddItem(new JunkItem("Extra Steps 2", null, true, "Steps", 2));
+
+                //Traps
+                Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 1", "Steps", -1));
+                Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 2", "Steps", -2));
+                Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 5", "Steps", -5));
+                Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 1", "Stars", -1));
+                Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 2", "Stars", -2));
+                Plugin.ModItemManager.AddTrap(new LoseTrap("Trap Take Steps 5", "Stars", -5));
+                Plugin.ModItemManager.AddTrap(new EndOfDayTrap("Trap End Day", "EOD"));
+                Plugin.ModItemManager.AddTrap(new FreezeTrap("Trap Freeze Items", "Freeze"));
+                Plugin.ModItemManager.AddTrap(new LoseItemTrap("Trap Lose Item", "Lose Item"));
+
+                //TODO Add PermanentUnlocks (Eg. Orchard)
+            }
+        }
+    }

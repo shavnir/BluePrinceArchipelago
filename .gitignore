@@ -3,3 +3,5 @@
 BluePrinceArchipelago/obj/*
 BluePrinceArchipelago/bin/*
 BluePrinceArchipelago/BluePrinceArchipelago.csproj.user
+*.csproj.user
+Directory.Build.props

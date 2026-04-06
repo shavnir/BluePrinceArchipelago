@@ -7,7 +7,6 @@ using Archipelago.MultiClient.Net.Packets;
 using BluePrinceArchipelago.Core;
 using BluePrinceArchipelago.Models;
 using BluePrinceArchipelago.Utils;
-using Il2CppSystem.IO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
