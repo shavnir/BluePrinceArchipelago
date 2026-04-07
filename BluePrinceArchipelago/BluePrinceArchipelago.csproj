@@ -12,15 +12,17 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <RootNamespace>BluePrinceArchipelago</RootNamespace>
+        <Configurations>Debug;Release</Configurations>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
+        <Optimize>True</Optimize>
         <OutputPath>$(BluePrinceDir)\BepInEx\plugins\$(AssemblyName)</OutputPath>
         <DefineConstants>DEBUG;TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
+        <IsPublishable>False</IsPublishable>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <DebugType>none</DebugType>
@@ -28,6 +30,7 @@
         <OutputPath>bin\Release\$(AssemblyName)</OutputPath>
         <DefineConstants>TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
+        <IsPublishable>False</IsPublishable>
     </PropertyGroup>
 
 	<ItemGroup>
