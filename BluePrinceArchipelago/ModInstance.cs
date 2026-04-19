@@ -126,7 +126,7 @@ namespace BluePrinceArchipelago
                 CommissaryMenu = GameObject.Find("UI OVERLAY CAM/Commissary Menu/")?.GetComponent<PlayMakerFSM>();
                 EndGameClicker = GameObject.Find("ROOMS/Antechamber/NON STATIC/DOOR 46/grey door/End Game Clicker")?.GetComponent<PlayMakerFSM>();//TODO get the full proper path name for this GameObject.
 
-                ConservatoryPickup = GameObject.Find("Conservatory Find - menu/PPtr(level2,23138)")?.GetComponent<PlayMakerFSM>();
+                ConservatoryPickup = GameObject.Find("FLOORPLAN 1 (1)/PPtr(level2,11549)")?.GetComponent<PlayMakerFSM>();
                 
                 DraftValidationAction = MasterPicker.GetState("3").GetFirstActionOfType<CallMethod>();
                 AddRoomForcer(MasterPicker);
