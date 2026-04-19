@@ -1255,6 +1255,11 @@ public class DebugCommand(string name) : Command(name)
     private void InvestigateConservatory()
     {
         var fsm = ModInstance.ConservatoryPickup;
+        if (fsm == null)
+            {
+            ArchipelagoConsole.LogMessage("Null Conservatory!!");
+                return;
+        }
 
 
         ArchipelagoConsole.LogMessage($"\nFSM: {fsm.FsmName}");
